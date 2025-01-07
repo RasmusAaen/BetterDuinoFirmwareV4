@@ -50,7 +50,7 @@ void MDuinoBase::run()
     {
         unsigned char c = Serial.read();
         if (c == '\n')
-            return;        
+            return;
         SerialBuffer[BufferIndex++] = c;
         if ((c == '\r') || (BufferIndex == SERIALBUFFERSIZE))   // Command complete or buffer full
         {
@@ -107,13 +107,13 @@ void MDuinoBase::checkEEPROM(const bool factoryReset /*= false*/)
     byte ConfigVersion = Storage.getConfigVersion();
 
     if ((ConfigVersion != CONFIG_VERSION) || (factoryReset == true))
-    {       
+    {
         #ifdef DEBUG_MSG
         Serial.println(F("Invalid Config Version or Factory Reset. Storing defaults in EEPROM and restart."));
         #endif
 
         // Fast blink
-        HeartBeatIntervall = HEARTBEAT_MILLIS / 8;        
+        HeartBeatIntervall = HEARTBEAT_MILLIS / 8;
 
         Storage.setType(MDuinoStorage::DomeMaster);
         Storage.setMP3Player(MDuinoStorage::MP3Trigger);
@@ -182,7 +182,7 @@ void MDuinoBase::AUX1(const unsigned int Duration)
     {
         AUX1Duration = 0;
         digitalWrite(P_AUX1, LOW);
-    } 
+    }
     else if (Duration == 99)
     {
         AUX1Duration = 0;
@@ -215,7 +215,7 @@ bool MDuinoBase::separateCommand(const char* command, char* cmd, unsigned int & 
         #endif
         return false;
     }
-    
+
     memcpy(cmd, command+1, 2);
     memcpy(param, command+3, 2);
 
@@ -265,7 +265,7 @@ void MDuinoBase::processSetupCommand(const char* command)
         else if (strcmp(cmd, "SS") == 0)
         {
             memcpy(param, command+3, 3);
-        }        
+        }
         else
         {
             return; // Invalid Command
@@ -309,28 +309,28 @@ void MDuinoBase::processSetupCommand(const char* command)
         Storage.getHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
         HMaxPos = param_num_ext;
         Storage.setHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
-    }    
+    }
     else if (strcmp(cmd, "HC") == 0)       // Set Holo HServo Degrees/Microseconds Min Pos,  dddd=0000-0180  deg, dddd > 0544 Microseconds
     {
         Storage.getHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
         HMinPos = param_num_ext;
         Storage.setHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
-    }    
+    }
     else if (strcmp(cmd, "HP") == 0)       // Set Holo HServo Speed (0-255)
     {
-    }    
+    }
     else if (strcmp(cmd, "VO") == 0)       // Set Holo VServo Degrees/Microseconds Max Pos,  dddd=0000-0180  deg, dddd > 0544 Microseconds
     {
         Storage.getHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
         VMaxPos = param_num_ext;
         Storage.setHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
-    }    
+    }
     else if (strcmp(cmd, "VC") == 0)       // Set Holo VServo Degrees/Microseconds Min Pos,  dddd=0000-0180  deg, dddd > 0544 Microseconds
     {
         Storage.getHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
         VMinPos = param_num_ext;
         Storage.setHoloPositions(param_num, HMinPos, HMaxPos, VMinPos, VMaxPos);
-    }    
+    }
     else if (strcmp(cmd, "VP") == 0)       // Set Holo VServo Speed (0-255)
     {
     }
@@ -342,7 +342,7 @@ void MDuinoBase::processSetupCommand(const char* command)
     {
         if (param_num <= 2)
             Storage.setDisableRandomSound(param_num);
-    }    
+    }
     else if (strcmp(cmd, "SX") == 0)       // Max Random Pause
     {
         Storage.setMaxRandomPause(param_num);
@@ -375,7 +375,9 @@ void MDuinoBase::processSetupCommand(const char* command)
             Storage.setMP3Player(MDuinoStorage::DFPlayer);
         else if (param_num == 2)
             Storage.setMP3Player(MDuinoStorage::Vocalizer);
-                    
+        else if (param_num == 3)
+            Storage.setMP3Player(MDuinoStorage::DYPlayer);
+
         delay(500);
         resetFunc();
     }
@@ -459,7 +461,7 @@ void MDuinoBase::processI2CCommand(const char* command)
 
     if (I2C_Address > 127) {
         return;
-    }     
+    }
 
     Wire.beginTransmission((uint8_t)I2C_Address);
     token=strtok(NULL, delim); 	// get next token
@@ -490,7 +492,7 @@ void MDuinoBase::processI2CCommand(const char* command)
                 {
                     isValid = true;
                     data = (uint8_t)ch;
-                }                
+                }
             break;
             default:
                 int num;
@@ -498,10 +500,10 @@ void MDuinoBase::processI2CCommand(const char* command)
                 {
                     isValid = true;
                     data = (uint8_t)num;
-                }                   
+                }
             break;
         }
-        if (isValid) 
+        if (isValid)
         {
             Wire.write(data);
         }

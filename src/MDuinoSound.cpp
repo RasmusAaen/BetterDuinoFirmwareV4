@@ -12,7 +12,22 @@ void MDuinoSound::VolumeStandard()
 void MDuinoSound::Play(const byte BankNr, const byte SoundNr)
 {
 	byte CalcSoundNr = 0;
-	CalcSoundNr = (BankNr - 1) * 25 + SoundNr;
+
+	switch (Storage.getMP3Player())
+	{
+	case MDuinoStorage::MDuinoMP3PlayerType::DYPlayer:
+		// DYPlayer plays songs by disk index, not by name. We need to calculate the index from bank and sound number.
+		// Files must be properly sorted on the SD card for this to work - use DriveSort or similar.
+		for (uint8_t i = 1; i < BankNr; i++)
+			CalcSoundNr += Storage.getMaxSound(i);
+		CalcSoundNr += SoundNr;
+		break;
+
+	default:
+		CalcSoundNr = (BankNr - 1) * 25 + SoundNr;
+		break;
+	}
+
 	Play(CalcSoundNr);
 }
 
@@ -32,10 +47,10 @@ void MDuinoSoundMP3Trigger::SetVolume(const byte Volume, const bool SetAsStandar
 {
 	byte cmd[2];
 
-	cmd[0] = 'v';	 // Volume
+	cmd[0] = 'v';		 // Volume
 	cmd[1] = Volume; // The VS1053 volume will be set to the value n.
-					 // Per the VS1053 datasheet, maximum volume is 0x00, and values
-					 // much above 0x40 are too low to be audible.
+									 // Per the VS1053 datasheet, maximum volume is 0x00, and values
+									 // much above 0x40 are too low to be audible.
 
 	if (SetAsStandard)
 		CurrentVolume = Volume;
@@ -85,7 +100,7 @@ void MDuinoSoundMP3Trigger::Play(const byte SoundNr)
 {
 	byte cmd[2];
 
-	cmd[0] = 't';	  // trigger
+	cmd[0] = 't';			// trigger
 	cmd[1] = SoundNr; // sound “NNNxxxx.MP3”
 
 	SoundSerial.write(cmd, 2);
@@ -196,8 +211,8 @@ void MDuinoSoundDFPlayer::sendCommand(const byte Command, const byte Param1, con
 	unsigned int checkSum = -(0xFF + 0x06 + Command + 0x00 + Param1 + Param2);
 
 	// Construct the command line
-	byte commandBuffer[10] = { 0x7E, 0xFF, 0x06, Command, 0x00, Param1, Param2,
-							  highByte(checkSum), lowByte(checkSum), 0xEF };
+	byte commandBuffer[10] = {0x7E, 0xFF, 0x06, Command, 0x00, Param1, Param2,
+														highByte(checkSum), lowByte(checkSum), 0xEF};
 
 	SoundSerial.write(commandBuffer, 10);
 	SoundSerial.flush();
@@ -301,7 +316,7 @@ MDuinoSoundDYPlayer::MDuinoSoundDYPlayer(SendOnlySoftwareSerial &SoundSerial) : 
 
 void MDuinoSoundDYPlayer::init()
 {
-	byte cmd[] = { 0xAA, 0x1A, 0x01, 0x00 }; // EQ-Normal
+	byte cmd[] = {0xAA, 0x1A, 0x01, 0x00}; // EQ-Normal
 
 	SoundSerial.flush();
 
@@ -314,7 +329,7 @@ void MDuinoSoundDYPlayer::init()
 
 void MDuinoSoundDYPlayer::SetVolume(const byte Volume, const bool SetAsStandard /*= true*/)
 {
-	byte cmd[4] = { 0xAA, 0x13, 0x01, 0x00 }; // Set Volume, Specify Volume (0-30)
+	byte cmd[4] = {0xAA, 0x13, 0x01, 0x00}; // Set Volume, Specify Volume (0-30)
 
 	cmd[3] = Volume;
 
@@ -364,7 +379,7 @@ void MDuinoSoundDYPlayer::VolumeOff()
 
 void MDuinoSoundDYPlayer::Play(const byte SoundNr)
 {
-	byte cmd[5] = { 0xAA, 0x07, 0x02, 0x00, 0x00 };	// Play specific Song
+	byte cmd[5] = {0xAA, 0x07, 0x02, 0x00, 0x00}; // Play specific Song
 
 	cmd[4] = SoundNr;
 
@@ -373,13 +388,13 @@ void MDuinoSoundDYPlayer::Play(const byte SoundNr)
 
 void MDuinoSoundDYPlayer::Stop()
 {
-	byte cmd[3] = { 0xAA, 0x04, 0x00 };
+	byte cmd[3] = {0xAA, 0x04, 0x00};
 	sendCommand(cmd, 0x03);
 }
 
 void MDuinoSoundDYPlayer::Quiet(const bool on /* = true*/)
 {
-	byte cmd[3] = { 0xAA, 0x10, 0x00 };
+	byte cmd[3] = {0xAA, 0x10, 0x00};
 	sendCommand(cmd, 0x03);
 }
 
