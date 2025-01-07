@@ -2,7 +2,7 @@
 #define __CONFIG_H__
 
 // Comment the line below when you are really really really really sure, what you are doin!
-#error NOT A FINAL RELEASE! Please choose a official release instead of the main branch!
+// #error NOT A FINAL RELEASE! Please choose a official release instead of the main branch!
 // ->>> https://github.com/RealNobser/BetterDuinoFirmwareV4/releases
 
 //
@@ -13,8 +13,8 @@
 // For connecting servos see https://github.com/RealNobser/BetterDuinoFirmwareV4/blob/main/README.md#connecting-servos-r2d2-common-way
 //
 // Specific Astromech, Choose one
-// #define R2D2
-#define CHOPPER
+#define R2D2
+// #define CHOPPER
 // #define BT1
 
 // #define DEBUG_MSG                        // Additional Log Messages to Serial
@@ -148,7 +148,7 @@
 
 // Body Master
 #define P_DPL            2
-#define P_UTIL_ARM_U     3 
+#define P_UTIL_ARM_U     3
 #define P_UTIL_ARM_L     4
 #define P_LEFT_BDY_DR    5
 #define P_LEFT_ARM       6
@@ -162,7 +162,7 @@
 
 // Body Slave
 //#define P_DPL            2
-//#define P_UTIL_ARM_U     3 
+//#define P_UTIL_ARM_U     3
 //#define P_UTIL_ARM_L     4
 //#define P_LEFT_BDY_DR    5
 //#define P_LEFT_ARM       6
