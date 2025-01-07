@@ -116,8 +116,8 @@ void MDuinoBase::checkEEPROM(const bool factoryReset /*= false*/)
         HeartBeatIntervall = HEARTBEAT_MILLIS / 8;
 
         Storage.setType(MDuinoStorage::DomeMaster);
-        Storage.setMP3Player(MDuinoStorage::MP3Trigger);
-        Storage.setStartupSoundNr(255);
+        Storage.setMP3Player(MDuinoStorage::DYPlayer);
+        Storage.setStartupSoundNr(67);
         Storage.setDisableRandomSound(0);
 
         // check SD-Card and edit sound banks!
@@ -128,7 +128,7 @@ void MDuinoBase::checkEEPROM(const bool factoryReset /*= false*/)
         Storage.setMaxSound(5,  3);
         Storage.setMaxSound(6,  3);
         Storage.setMaxSound(7,  3);
-        Storage.setMaxSound(8,  6);
+        Storage.setMaxSound(8,  1);
         Storage.setMaxSound(9,  8);
         // check SD-Card and edit sound banks!
 
