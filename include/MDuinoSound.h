@@ -78,6 +78,7 @@ class MDuinoSound
         virtual void VolumeOff()    = 0;
 
         virtual void Play(const byte SoundNr) = 0;
+        virtual void Play(const byte BankNr, const byte SoundNr);
         virtual void Stop() = 0;
         virtual void Quiet(const bool on = true) = 0;
 
@@ -86,7 +87,6 @@ class MDuinoSound
         virtual void Overload() {}; // empty, but not pure virtual by design
 
         void VolumeStandard();
-        void Play(const byte BankNr, const byte SoundNr);
 
     protected:
         byte CurrentVolume = 0;
@@ -188,6 +188,7 @@ class MDuinoSoundDYPlayer : public MDuinoSound
         virtual void VolumeOff() override;
 
         virtual void Play(const byte SoundNr) override;
+        virtual void Play(const byte BankNr, const byte SoundNr) override;
         virtual void Stop() override;
         virtual void Quiet(const bool on = true) override;
 
