@@ -296,6 +296,8 @@ void MDuinoSoundVocalizer::Overload()
 
 ///////////
 
+#ifdef INCLUDE_DY_PLAYER
+
 MDuinoSoundDYPlayer::MDuinoSoundDYPlayer(SendOnlySoftwareSerial &SoundSerial) : SoundSerial(SoundSerial)
 {
 	CurrentVolume = 15; // Medium Volume
@@ -411,3 +413,5 @@ void MDuinoSoundDYPlayer::sendCommand(const byte *Command, const byte len)
 	// Delay needed between successive commands
 	delay(100);
 }
+
+#endif	//INCLUDE_DY_PLAYER

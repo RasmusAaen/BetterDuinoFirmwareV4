@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <SendOnlySoftwareSerial.h>
+#include "config.h"
 
 #include "MDuinoStorage.h"
 
@@ -172,6 +173,7 @@ class MDuinoSoundVocalizer : public MDuinoSound
         SendOnlySoftwareSerial& SoundSerial;
 };
 
+#ifdef INCLUDE_DY_PLAYER
 class MDuinoSoundDYPlayer : public MDuinoSound
 {
     public:
@@ -198,4 +200,6 @@ class MDuinoSoundDYPlayer : public MDuinoSound
         SendOnlySoftwareSerial& SoundSerial;
         void sendCommand(const byte* Command, const byte len);
 };
+#endif // INCLUDE_DY_PLAYER
+
 #endif // __MDUINOSOUND_H__
