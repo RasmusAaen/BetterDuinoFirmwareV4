@@ -145,7 +145,7 @@ void MDuinoBase::checkEEPROM(const bool factoryReset /*= false*/)
             Storage.setHoloServoSpeed(i, 0, 0);     // Full speed
             Storage.setHoloPositions(i, HOLO_MIN, HOLO_MAX, HOLO_MIN, HOLO_MAX);
             Storage.setHoloLightHighActive(i, true);
-            Storage.setHoloNeoPixel(i, false);  // Non NeoPixels
+            Storage.setHoloNeoPixel(i, true);  // Non NeoPixels
             Storage.setHoloLEDs(i, 7);          // 7 LEDs for NeoPixels
         }
 
@@ -248,6 +248,9 @@ void MDuinoBase::processSetupCommand(const char* command)
     word VMinPos    = 0;
     word VMaxPos    = 0;
 
+    byte HSpeed     = 0;
+    byte VSpeed     = 0;
+
     memset(cmd, 0x00, 3);
     memset(param, 0x00, 4);
     memset(param_ext, 0x00, 5);
@@ -318,6 +321,9 @@ void MDuinoBase::processSetupCommand(const char* command)
     }
     else if (strcmp(cmd, "HP") == 0)       // Set Holo HServo Speed (0-255)
     {
+        Storage.getHoloServoSpeed(param_num, HSpeed, VSpeed);
+        HSpeed = param_num_ext;
+        Storage.setHoloServoSpeed(param_num, HSpeed, VSpeed);
     }
     else if (strcmp(cmd, "VO") == 0)       // Set Holo VServo Degrees/Microseconds Max Pos,  dddd=0000-0180  deg, dddd > 0544 Microseconds
     {
@@ -333,6 +339,9 @@ void MDuinoBase::processSetupCommand(const char* command)
     }
     else if (strcmp(cmd, "VP") == 0)       // Set Holo VServo Speed (0-255)
     {
+        Storage.getHoloServoSpeed(param_num, HSpeed, VSpeed);
+        VSpeed = param_num_ext;
+        Storage.setHoloServoSpeed(param_num, HSpeed, VSpeed);
     }
     else if (strcmp(cmd, "SS") == 0)       // Sound Control
     {
